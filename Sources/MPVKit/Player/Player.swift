@@ -19,6 +19,7 @@ public final class Player {
     let bridge:   DisplayBridge
 
     @ObservationIgnored private nonisolated(unsafe) var eventTask: Task<Void, Never>?
+    private var pendingSeekPosition: Duration? = nil
 
     // MARK: Init
 
@@ -54,8 +55,9 @@ public final class Player {
 
     // MARK: - Playback API
 
-    public func play(url: URL, headers: [String: String] = [:]) {
+    public func play(url: URL, headers: [String: String] = [:], seekTo: Duration? = nil) {
         if !headers.isEmpty { core.setHTTPHeaders(headers) }
+        pendingSeekPosition = seekTo
         core.command(["loadfile", url.absoluteString])
         bridge.isReadyToRender = false
         bridge.flush()
@@ -159,6 +161,10 @@ public final class Player {
         case .fileLoaded:
             core.setFlag(.pause, false)
             bridge.isReadyToRender = true
+            if let pos = pendingSeekPosition {
+                seek(to: pos)
+                pendingSeekPosition = nil
+            }
             state.duration    = Duration.seconds(core.getDouble(.duration))
             state.isBuffering = false
             state.isPlaying   = true
