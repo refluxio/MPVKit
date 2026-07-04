@@ -29,6 +29,10 @@ public final class MPVCore: @unchecked Sendable {
         mpv_set_option_string(h, "hwdec",        "auto-safe")  // 默认自动；可通过 Player.setHwAccel() 运行时覆盖
         // audio-device 不设，让 MPV 自动选默认输出（coreaudio/default 在 iOS 构建里不是有效设备 ID）
         mpv_set_option_string(h, "sub-auto",     "fuzzy")
+        // Subtitle size: relative to video content, not the full FBO/window.
+        // Without this, portrait mode FBO is tall → subtitles appear huge.
+        mpv_set_option_string(h, "sub-scale-by-window", "no")
+        mpv_set_option_string(h, "sub-font-size",       "52")
         mpv_set_option_string(h, "keep-open",    "yes")
         mpv_set_option_string(h, "idle",         "yes")
         mpv_set_option_string(h, "video-sync",   "display-resample")  // 微调音频同步显示帧率，消除 24fps@60Hz judder

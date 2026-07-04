@@ -101,6 +101,13 @@ public final class Player {
 
     public func selectSubtitle(id: String?) {
         core.setString(.sid, id ?? "no")
+        // Seek to current position to force immediate subtitle track refresh.
+        // Without this, MPV may take 1-2s to locate and render the new sub track.
+        let pos = core.getDouble(.timePos)
+        if pos > 0 {
+            let secs = String(format: "%.3f", pos)
+            core.command(["seek", secs, "absolute"])
+        }
     }
 
     public func setRate(_ rate: Double) {
