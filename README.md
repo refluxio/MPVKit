@@ -39,23 +39,11 @@ targets: [
 ]
 ```
 
-### 2. Download libmpv xcframeworks
+### 2. Link to your target
 
-MPVKit depends on pre-built libmpv + FFmpeg xcframeworks (LGPL 2.1+). They are git-ignored and must be downloaded separately:
+In your Xcode project, select your target → **General → Frameworks, Libraries, and Embedded Content** → add `MPVKit`.
 
-```bash
-cd Packages/MPVKit
-./download_xcframeworks.sh
-```
-
-This fetches xcframeworks from [media-kit/libmpv-darwin-build](https://github.com/media-kit/libmpv-darwin-build) v0.7.2.
-
-### 3. Add to Xcode project
-
-If using an Xcode project (not SPM-only):
-
-1. **File → Add Package Dependencies → Add Local** → select the MPVKit folder
-2. Link `MPVKit` to your target
+SPM resolves and downloads the pre-built libmpv + FFmpeg xcframeworks (LGPL 2.1+) automatically — no manual download step needed.
 
 ## Quick Start
 
