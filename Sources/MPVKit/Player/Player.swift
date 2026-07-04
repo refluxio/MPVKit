@@ -57,6 +57,7 @@ public final class Player {
     public func play(url: URL, headers: [String: String] = [:]) {
         if !headers.isEmpty { core.setHTTPHeaders(headers) }
         core.command(["loadfile", url.absoluteString])
+        bridge.isReadyToRender = false
         bridge.flush()
         bridge.clear()
         bridge.start()
@@ -157,6 +158,7 @@ public final class Player {
         switch event {
         case .fileLoaded:
             core.setFlag(.pause, false)
+            bridge.isReadyToRender = true
             state.duration    = Duration.seconds(core.getDouble(.duration))
             state.isBuffering = false
             state.isPlaying   = true

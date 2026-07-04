@@ -16,6 +16,8 @@ public final class DisplayBridge {
 
     var videoWidth:  Int = 0
     var videoHeight: Int = 0
+    /// 只有 .fileLoaded 事件后才允许渲染，防止新文件加载过渡期渲染旧视频帧。
+    var isReadyToRender = false
 
     private(set) var renderer: VideoRenderer
     private var displayLink: CADisplayLink?
@@ -77,7 +79,7 @@ public final class DisplayBridge {
     @objc private func tick() {
         let w = videoWidth
         let h = videoHeight
-        guard w > 0, h > 0 else { return }
+        guard w > 0, h > 0, isReadyToRender else { return }
         renderer.renderFrame(width: w, height: h)
     }
 }
